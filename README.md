@@ -10,7 +10,11 @@
 更新検知 → キーワードフィルタ → AIサマリー生成 → Slack通知 + Sheets追記
 ```
 
-## 機能
+## 現在の実装範囲
+
+既定ブランチで収録されているのは、Phase 1のRSS/HTML解析・状態管理とそのテストです。以下の機能一覧・設定例・CLI例・構成図には未実装の設計内容も含まれます。AI要約、Slack/Sheets出力、設定管理、スケジューラ、CLIはロードマップ上の後続段階です。クロール間隔やrobots.txt遵守の項目も運用方針であり、現コードによる自動強制が確認された機能ではありません。
+
+## 機能（計画を含む）
 
 - **RSS監視** — feedparserによるRSSポーリング（厚労省・e-Gov・東京都等）
 - **HTMLスクレイピング** — RSS非対応ページをCSS/XPathセレクタで差分検知
@@ -177,3 +181,9 @@ python -m pytest tests/test_rss_poller.py -v
 - [ ] Phase 3: Slack通知・Google Sheets追記・JSONLアーカイブ
 - [ ] Phase 4: スケジューラ・CLI・設定管理
 - [ ] Phase 5: Playwright対応（JavaScript重いサイト）・PDFハッシュ比較
+
+## 成立と開発段階
+
+[設計書](design.md)は、RSSだけでは拾えない個別ページをHTMLの範囲指定で補い、一次情報URLへ戻れる更新記録を作ることを出発点にしています。[2026年4月29日の初期コミット](https://github.com/masa-san-jp/public-info-monitoring/commit/76eb9ede8590a6fe722a7a04c87a101e15f37aed)に、RSS/HTML解析と状態保存、フィクスチャを使ったテスト基盤が収録されています。設計書の日付表記とGitの記録時刻は区別してください。
+
+現段階は末尾ロードマップのPhase 1です。例えば[HTMLScraper](gov_monitor/pollers/html_scraper.py)は渡されたHTMLをCSSセレクタで抽出しハッシュ化する解析部品です。通知・要約・CLIを含む全体フローは設計上の到達点であり、継続監視や実通知が稼働済みという意味ではありません。次段階では処理層、出力層、スケジューラを接続して検証します。
